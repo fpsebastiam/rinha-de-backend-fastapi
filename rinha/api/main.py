@@ -19,8 +19,10 @@ def read_pessoa(
     pessoa_id: UUID, 
     db: Session = Depends(deps.get_db),
 ) -> Any:
-    users = crud.pessoa.get(db, id=pessoa_id)
-    return users
+    user = crud.pessoa.get(db, id=pessoa_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return user
 
 
 @app.post("/pessoas", status_code=201)
