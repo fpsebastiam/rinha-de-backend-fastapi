@@ -26,7 +26,6 @@ class Settings(BaseSettings):
             host=values.get("POSTGRES_SERVER"),
             path=f"{values.get('POSTGRES_DB') or ''}",
         ))
-        print(f"your databse url is {url}")
         return url
 
     class Config:
