@@ -1,0 +1,46 @@
+version: '3.9'
+services:
+  db:
+    image: postgres:12
+    env_file:
+     - .env
+    deploy:
+      resources:
+        limits:
+          cpus: '0.75'
+          memory: '1.5GB'
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - rinha-network
+
+  api1:
+    build: .
+    command: >
+      bash -c "alembic upgrade head
+      && uvicorn rinha.api.main:app --host 0.0.0.0 --reload"
+    hostname: api1
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+
+    deploy:
+      resources:
+        limits:
+          cpus: '0.75'
+          memory: '0.5GB'
+    networks:
+      - rinha-network
+
+networks:
+  rinha-network:
+    driver: bridge
