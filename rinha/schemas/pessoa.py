@@ -11,7 +11,7 @@ class PessoaBase(BaseModel):
     apelido: constr(max_length=32)
     nome: constr(max_length=100)
     nascimento: BirthDate
-    stack: List[constr(max_length=32)] = None
+    stack: Optional[List[constr(max_length=32)]] = None
 
 
 class PessoaCreate(PessoaBase):
