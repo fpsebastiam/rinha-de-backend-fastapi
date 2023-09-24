@@ -1,7 +1,7 @@
 from typing import Any, List
 from uuid import UUID
 
-from fastapi import Body, Depends, FastAPI, HTTPException
+from fastapi import Body, Depends, FastAPI, HTTPException, Response
 from fastapi.encoders import jsonable_encoder
 from pydantic.networks import EmailStr
 from sqlalchemy.orm import Session
@@ -23,14 +23,12 @@ def read_pessoa(
     return users
 
 
-@app.post("/pessoas", response_model=Pessoa)
+@app.post("/pessoas", status_code=201)
 def create_user(
     pessoa_in: PessoaCreate,
+    response: Response,
     db: Session = Depends(deps.get_db),
 ) -> Any:
-    """
-    Create new user.
-    """
     user = crud.pessoa.exists_by_apelido(db, apelido=pessoa_in.apelido)
     if user:
         raise HTTPException(
@@ -38,7 +36,7 @@ def create_user(
             detail="Unprocessable Entity",
         )
     user = crud.pessoa.create(db, obj_in=pessoa_in)
-    return user
+    response.headers["Location"] = f"/pessoas/{user.id}"
 
 
 @app.get("/pessoas", response_model=List[Pessoa])
