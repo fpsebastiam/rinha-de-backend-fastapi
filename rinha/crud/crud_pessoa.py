@@ -42,7 +42,7 @@ class CRUDPessoa(CRUDBase[Pessoa, PessoaCreate]):
             Pessoa.nome.ilike(f"%{term}%"),
             Pessoa.apelido.ilike(f"%{term}%"),
             subquery > 0,
-        )).all()
+        )).limit(50).all()
     
     def exists_by_apelido(self, db: Session, *, apelido: str) -> bool:
         return db.query(Pessoa).filter(Pessoa.apelido == apelido).count() > 0
