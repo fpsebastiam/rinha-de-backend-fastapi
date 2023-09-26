@@ -1,9 +1,7 @@
 from typing import Any, List, Optional
 from uuid import UUID
 
-from fastapi import Body, Depends, FastAPI, HTTPException, Response
-from fastapi.encoders import jsonable_encoder
-from pydantic.networks import EmailStr
+from fastapi import Depends, FastAPI, HTTPException, Response
 from sqlalchemy.orm import Session
 
 from rinha import crud
