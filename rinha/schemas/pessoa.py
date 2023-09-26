@@ -1,8 +1,7 @@
-from typing import List, Optional
 import uuid
+from typing import List, Optional
 
 from pydantic import BaseModel, constr
-
 
 BirthDate = constr(pattern=r'^\d{4}-\d{2}-\d{2}$')
 

@@ -5,9 +5,8 @@ from fastapi import Depends, FastAPI, HTTPException, Response
 from sqlalchemy.orm import Session
 
 from rinha import crud
-from rinha.schemas.pessoa import PessoaCreate, Pessoa
 from rinha.api import deps
-
+from rinha.schemas.pessoa import Pessoa, PessoaCreate
 
 app = FastAPI(title="Rinha de backend 2023")
 

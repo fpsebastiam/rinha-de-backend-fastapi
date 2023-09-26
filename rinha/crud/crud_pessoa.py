@@ -1,8 +1,8 @@
-from typing import Any, Dict, Optional, Union
 import uuid
+from typing import Optional
 
+from sqlalchemy import text
 from sqlalchemy.orm import Session
-from sqlalchemy import any_, literal, func, select, or_, column, text
 
 from rinha.crud.base import CRUDBase
 from rinha.models.pessoa import Pessoa
