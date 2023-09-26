@@ -24,7 +24,7 @@ def upgrade() -> None:
     sa.Column('apelido', sa.String(length=32), nullable=False),
     sa.Column('nascimento', sa.String(), nullable=True),
     sa.Column('nome', sa.String(length=100), nullable=True),
-    sa.Column('stack', sa.ARRAY(sa.String(length=32)), nullable=True),
+    sa.Column('stack', sa.String(length=1024), nullable=True),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('id')
     )

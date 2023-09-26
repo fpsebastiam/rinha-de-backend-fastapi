@@ -2,7 +2,7 @@ from typing import Any, Dict, Optional, Union
 import uuid
 
 from sqlalchemy.orm import Session
-from sqlalchemy import any_, literal, func, select, or_, column
+from sqlalchemy import any_, literal, func, select, or_, column, text
 
 from rinha.crud.base import CRUDBase
 from rinha.models.pessoa import Pessoa
@@ -32,17 +32,9 @@ class CRUDPessoa(CRUDBase[Pessoa, PessoaCreate]):
 
 
     def search(self, db: Session, *, term: str) -> int:
-        # TODO: this is very clunky, but will be replaced by an index
-        subquery = select(func.count().label("count")).\
-            select_from(func.unnest(Pessoa.stack).alias("stack_el")).\
-                where(column("stack_el").ilike(f"%{term}%")).\
-                    subquery().as_scalar()
-
-        return db.query(Pessoa).filter(or_(
-            Pessoa.nome.ilike(f"%{term}%"),
-            Pessoa.apelido.ilike(f"%{term}%"),
-            subquery > 0,
-        )).limit(50).all()
+        return db.query(Pessoa).filter(
+            text(f"busca like '%{term}%'")
+        ).limit(50).all()
     
     def exists_by_apelido(self, db: Session, *, apelido: str) -> bool:
         return db.query(Pessoa).filter(Pessoa.apelido == apelido).count() > 0

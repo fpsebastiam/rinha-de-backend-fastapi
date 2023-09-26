@@ -9,6 +9,7 @@ services:
         limits:
           cpus: '0.75'
           memory: '1.5GB'
+    command: postgres -c shared_buffers=384MB -c max_connections=400 -c log_min_messages=FATAL
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
@@ -22,8 +23,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.75'
-          memory: '0.5GB'
+          cpus: '0.3'
+          memory: '0.6GB'
     depends_on:
       db:
         condition: service_healthy
@@ -32,14 +33,14 @@ services:
     command: >
       bash -c "
       alembic upgrade head
-      && uvicorn rinha.api.main:app --host 0.0.0.0 --port 8000 --reload --timeout-keep-alive 500"
+      && uvicorn rinha.api.main:app --host 0.0.0.0 --port 8000 --reload --timeout-keep-alive 500 --no-access-log"
     networks:
       - rinha
 
   api2:
     <<: *api
     command: >
-      bash -c "uvicorn rinha.api.main:app --host 0.0.0.0 --port 8001 --reload --timeout-keep-alive 500"
+      bash -c "uvicorn rinha.api.main:app --host 0.0.0.0 --port 8001 --reload --timeout-keep-alive 500 --no-access-log"
 
   nginx:
     image: nginx:latest

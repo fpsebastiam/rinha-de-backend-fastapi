@@ -13,6 +13,10 @@ class PessoaBase(BaseModel):
     nascimento: BirthDate
     stack: Optional[List[constr(max_length=32)]] = None
 
+    @property
+    def stack(self) -> str:
+        return ','.join(self.stack) if self.stack else None
+
 
 class PessoaCreate(PessoaBase):
     pass
@@ -27,4 +31,4 @@ class PessoaInDBBase(PessoaBase):
 
 # properties to return to client
 class Pessoa(PessoaInDBBase):
-    pass
+    stack: Optional[str] = None
