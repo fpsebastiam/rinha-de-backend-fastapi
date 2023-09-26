@@ -1,4 +1,4 @@
-from typing import Any, List
+from typing import Any, List, Optional
 from uuid import UUID
 
 from fastapi import Body, Depends, FastAPI, HTTPException, Response
@@ -43,9 +43,11 @@ def create_user(
 
 @app.get("/pessoas", response_model=List[Pessoa])
 def search_pessoas(
-    t: str = None,
+    t: Optional[str] = None,
     db: Session = Depends(deps.get_db),
 ) -> Any:
+    if t is None:
+        raise HTTPException(status_code=400, detail="Missing search term 't'")
     return crud.pessoa.search(db, term=t)
 
 
