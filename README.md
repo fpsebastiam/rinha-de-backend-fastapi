@@ -8,7 +8,6 @@ The current implementation achieves a count of 23891, without using the `network
 ![Gatling Results](/rinha/docs/stress_test_gatling.png)
 
 ## TODO
-- Try some caching
 - See if bulk inserts help
 - Optimize sqlalchemy and postgres configs
 - Try `network_mode: host`
