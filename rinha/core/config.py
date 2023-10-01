@@ -20,7 +20,7 @@ class Settings(BaseSettings):
             return v
         # TODO: debug why SQLAlchemy is not accepting PostgresDsn
         url = str(PostgresDsn.build(
-            scheme="postgresql",
+            scheme="postgresql+asyncpg",
             username=values.get("POSTGRES_USER"),
             password=values.get("POSTGRES_PASSWORD"),
             host=values.get("POSTGRES_SERVER"),

@@ -3,9 +3,6 @@ from typing import Generator
 from rinha.db.session import SessionLocal
 
 
-def get_db() -> Generator:
-    try:
-        db = SessionLocal()
-        yield db
-    finally:
-        db.close()
+async def get_db() -> Generator:
+    async with SessionLocal() as async_session:
+        yield async_session

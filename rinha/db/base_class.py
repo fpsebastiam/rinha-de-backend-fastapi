@@ -1,10 +1,11 @@
 from typing import Any
 
 from sqlalchemy.ext.declarative import as_declarative, declared_attr
+from sqlalchemy.ext.asyncio import AsyncAttrs
 
 
 @as_declarative()
-class Base:
+class Base(AsyncAttrs):
     id: Any
     __name__: str
     # Generate __tablename__ automatically

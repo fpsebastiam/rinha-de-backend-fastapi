@@ -7,4 +7,3 @@ Heavily inspired by [iancambrea's solution](https://github.com/iancambrea/rinha-
 - See if bulk inserts help
 - Optimize sqlalchemy and postgres configs
 - Try `network_mode: host`
-- leverage FastAPI's async features
