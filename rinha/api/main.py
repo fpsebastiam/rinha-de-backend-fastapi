@@ -6,9 +6,16 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from rinha import crud
 from rinha.api import deps
+from rinha.db.cache import Cache
 from rinha.schemas.pessoa import Pessoa, PessoaCreate
 
 app = FastAPI(title="Rinha de backend 2023")
+
+
+@app.on_event("startup")
+def startup():
+    global cache
+    cache = Cache()
 
 
 @app.get("/pessoas/{pessoa_id}", response_model=Pessoa)
@@ -16,10 +23,14 @@ async def read_pessoa(
     pessoa_id: UUID, 
     db: AsyncSession = Depends(deps.get_db),
 ) -> Any:
-    user = await crud.pessoa.get(db, id=pessoa_id)
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-    return user
+    if cached_user := await cache.get(f"pessoa:{pessoa_id}"):
+        return cached_user
+    
+    if db_user := await crud.pessoa.get(db, id=pessoa_id):
+        return db_user
+    
+    raise HTTPException(status_code=404, detail="User not found")
+
 
 
 @app.post("/pessoas", status_code=201)
@@ -28,13 +39,19 @@ async def create_user(
     response: Response,
     db: AsyncSession = Depends(deps.get_db),
 ) -> Any:
-    user = await crud.pessoa.exists_by_apelido(db, apelido=pessoa_in.apelido)
-    if user:
+    if await cache.get(f"nickname:{pessoa_in.apelido}"):
         raise HTTPException(
             status_code=422,
             detail="Unprocessable Entity",
         )
+
     user = await crud.pessoa.create(db, obj_in=pessoa_in)
+    await cache.set(f"nickname:{user.apelido}", "1")
+    # TODO: make the id insertion transparent
+    pessoa_dict = {**pessoa_in.model_dump(), "id": str(user.id)}
+    pessoa_dict["stack"] = user.stack
+    await cache.set(f"pessoa:{user.id}", pessoa_dict)
+
     response.headers["Location"] = f"/pessoas/{user.id}"
 
 
