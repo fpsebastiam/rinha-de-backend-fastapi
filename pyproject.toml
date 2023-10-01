@@ -11,9 +11,10 @@ fastapi = "^0.103.1"
 uvicorn = {extras = ["standard"], version = "^0.23.2"}
 redis = "^5.0.0"
 alembic = "^1.12.0"
-sqlalchemy = "^2.0.21"
+sqlalchemy = {extras = ["asyncio"], version = "^2.0.21"}
 psycopg2-binary = "^2.9.7"
 pydantic-settings = "^2.0.3"
+asyncpg = "^0.28.0"
 
 
 [tool.poetry.group.dev.dependencies]
