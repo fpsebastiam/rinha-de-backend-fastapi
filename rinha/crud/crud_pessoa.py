@@ -43,11 +43,6 @@ class CRUDPessoa(CRUDBase[Pessoa, PessoaCreate]):
         ).limit(50)
         matching_pessoas = await db.execute(query)
         return [r[0] for r in matching_pessoas.all()]
-    
-    async def exists_by_apelido(self, db: Session, *, apelido: str) -> bool:
-        query = select(func.count()).filter(Pessoa.apelido == apelido)
-        pessoas_with_apelido = await db.scalar(query)
-        return pessoas_with_apelido > 0
 
 
 pessoa = CRUDPessoa(Pessoa)

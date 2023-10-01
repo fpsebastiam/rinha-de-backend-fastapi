@@ -7,8 +7,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.75'
-          memory: '1.5GB'
+          cpus: '0.65'
+          memory: '1GB'
     command: postgres -c shared_buffers=384MB -c max_connections=400 -c log_min_messages=FATAL
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U postgres" ]
@@ -64,6 +64,18 @@ services:
         limits:
           cpus: '0.15'
           memory: '0.3GB'
+
+  redis:
+    image: redis:latest
+    command: redis-server --appendonly no --save ""
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: '0.5GB'
+    networks:
+      - rinha
+
 networks:
   rinha:
     driver: bridge
