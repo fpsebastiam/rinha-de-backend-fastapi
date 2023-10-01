@@ -5,7 +5,7 @@ Heavily inspired by [iancambrea's solution](https://github.com/iancambrea/rinha-
 ## Stress Testing
 The current implementation achieves a count of 23891, without using the `network_mode: host` config. Below is a summary of the stress test:
 
-![Gatling Results](image.png)
+![Gatling Results](/rinha/docs/stress_test_gatling.png)
 
 ## TODO
 - Try some caching
